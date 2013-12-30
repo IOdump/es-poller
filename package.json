@@ -1,0 +1,10 @@
+{
+  "name": "es-poller",
+  "version": "0.1.0",
+  "devDependencies": {
+    "mocha": "1.14.0",
+    "chai": "1.8.1",
+    "sinon": "1.7.3",
+    "rewire": "*"
+  }
+}
