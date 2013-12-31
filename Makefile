@@ -9,7 +9,7 @@ test-w:
 test-cov: istanbul
 
 istanbul:
-	istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info
+	istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec && cat ./coverage/lcov.info
 
 coveralls:
 	cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
