@@ -2,7 +2,8 @@
   "name": "es-poller",
   "version": "0.1.0",
   "dependencies": {
-    "elasticsearch": "*"
+    "elasticsearch": "*",
+    "amqp": "0.1.x"
   },
   "devDependencies": {
     "mocha": "1.14.0",

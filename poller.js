@@ -1,24 +1,62 @@
 var  elasticsearch = require('elasticsearch')
-   , fs            = require('fs');
+   , fs            = require('fs')
+   , amqp          = require('amqp');
+
+
+var connection = amqp.createConnection({ host: '127.0.0.1' });
+
 
 var client = new elasticsearch.Client({
   host: 'localhost:9210'
 });
 
+// load confs
+var confs = [];
 
-var file = __dirname + '/query.json';
-var data = fs.readFileSync(file).toString();
-var query = JSON.parse(data);
+var files = fs.readdirSync('./conf.d/');
+for(var i in files) {
+  console.log('conf Loaded: ' + files[i]);
+  confs.push(files[i]);
+}
 
 
-client.search({
-  index: 'logstash-2013.12.30',
-  body: query
-}).then(function (resp) {
+// Wait for connection to become established.
+connection.on('ready', function () {
 
-  console.log(resp);
+  console.log('rabbitmq connected !');
 
-}, function (err) {
-  console.trace(err.message);
+  exchange = connection.exchange('iorealtime');
+
+  // run all
+  for(var i in confs) {
+  
+    // run
+    var file =  './conf.d/' + confs[i];
+    var data = JSON.parse(fs.readFileSync(file).toString());
+    var index = data.index;
+    var query = data.query;
+    var topic = data.topic; 
+  
+  
+    // run each 
+    setInterval(function() {
+  
+        client.search({
+          index: index,
+          body: query
+        }).then(function (resp) {
+      
+          console.log(resp);
+          exchange.publish(topic, resp);
+          // send 
+  
+  
+        }, function (err) {
+          console.trace(err.message);
+      
+        });
+      }, 1000);
+  }
+
 
 });

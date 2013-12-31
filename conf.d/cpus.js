@@ -1,0 +1,71 @@
+{
+   "index":"logstash-2013.12.31",
+   "topic":"dstat.ns3362777.cpu.user", 
+   "query":{
+      "facets":{
+         "0":{
+            "date_histogram":{
+               "key_field":"@timestamp",
+               "value_field":"cpuuser",
+               "interval":"5m"
+            },
+            "facet_filter":{
+               "fquery":{
+                  "query":{
+                     "filtered":{
+                        "query":{
+                           "query_string":{
+                              "query":"host:ns3362777"
+                           }
+                        },
+                        "filter":{
+                           "bool":{
+                              "must":[
+                                 {
+                                    "match_all":{
+
+                                    }
+                                 },
+                                 {
+                                    "fquery":{
+                                       "query":{
+                                          "field":{
+                                             "_type":{
+                                                "query":"\"dstat4\""
+                                             }
+                                          }
+                                       },
+                                       "_cache":true
+                                    }
+                                 },
+                                 {
+                                    "range":{
+                                       "@timestamp":{
+                                       "gt": "now-5s",
+                                       "lte": "now"
+                                       }
+                                    }
+                                 },
+                                 {
+                                    "bool":{
+                                       "must":[
+                                          {
+                                             "match_all":{
+
+                                             }
+                                          }
+                                       ]
+                                    }
+                                 }
+                              ]
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "size":0
+   }
+}
