@@ -1,9 +1,9 @@
 var  elasticsearch = require('elasticsearch')
-   , fs            = require('fs')
-   , amqp          = require('amqp');
+, fs            = require('fs')
+, amqp          = require('amqp')
+, runner        = require('./lib/runner');
 
 
-var connection = amqp.createConnection({ host: '127.0.0.1' });
 
 
 var client = new elasticsearch.Client({
@@ -20,43 +20,17 @@ for(var i in files) {
 }
 
 
-// Wait for connection to become established.
-connection.on('ready', function () {
-
-  console.log('rabbitmq connected !');
-
-  exchange = connection.exchange('iorealtime');
 
   // run all
   for(var i in confs) {
-  
+
     // run
     var file =  './conf.d/' + confs[i];
     var data = JSON.parse(fs.readFileSync(file).toString());
-    var index = data.index;
-    var query = data.query;
-    var topic = data.topic; 
-  
-  
+
     // run each 
-    setInterval(function() {
-  
-        client.search({
-          index: index,
-          body: query
-        }).then(function (resp) {
-      
-          console.log(resp);
-          exchange.publish(topic, resp);
-          // send 
-  
-  
-        }, function (err) {
-          console.trace(err.message);
-      
-        });
-      }, 1000);
+    run = new runner(client, data);
+    run.run();
+
   }
 
-
-});

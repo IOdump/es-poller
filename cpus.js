@@ -1,13 +1,13 @@
 {
    "index":"logstash-2013.12.31",
-   "topic":"dstat.ns3362777.cpu.user", 
+   "topic":"dstat.ns3361853.cpu.user", 
    "query":{
       "facets":{
          "0":{
             "date_histogram":{
                "key_field":"@timestamp",
                "value_field":"cpuuser",
-               "interval":"5m"
+               "interval":"1s"
             },
             "facet_filter":{
                "fquery":{
@@ -15,7 +15,7 @@
                      "filtered":{
                         "query":{
                            "query_string":{
-                              "query":"host:ns3362777"
+                              "query":"host:ns3361853"
                            }
                         },
                         "filter":{
@@ -41,8 +41,8 @@
                                  {
                                     "range":{
                                        "@timestamp":{
-                                       "gt": "now-5s",
-                                       "lte": "now"
+                                       "gt": "now-7200s",
+                                       "lte": "now-7100s"
                                        }
                                     }
                                  },
