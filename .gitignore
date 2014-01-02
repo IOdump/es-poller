@@ -15,5 +15,6 @@ npm-debug.log
 node_modules
 
 coverage
-conf.d
+queries.d
 other-conf.d
+config.js

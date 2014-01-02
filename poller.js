@@ -1,36 +1,37 @@
-var  elasticsearch = require('elasticsearch')
-, fs            = require('fs')
-, amqp          = require('amqp')
-, runner        = require('./lib/runner');
+var  fs            = require('fs')
+   , amqp          = require('amqp')
+   , elasticsearch = require('elasticsearch')
+   , runner        = require('./lib/runner');
 
 
+// load configuration file
+var   conf                 = JSON.parse(fs.readFileSync('./config.js').toString())
+    , elasticsearch_client = new elasticsearch.Client(conf.elastic)
+    , amqp_connection      = amqp.createConnection(conf.amqp);
 
 
-var client = new elasticsearch.Client({
-  host: 'localhost:9210'
-});
+var files = fs.readdirSync('./queries.d/');
 
-// load confs
-var confs = [];
+console.log('waiting for amqp connection');
 
-var files = fs.readdirSync('./conf.d/');
-for(var i in files) {
-  console.log('conf Loaded: ' + files[i]);
-  confs.push(files[i]);
-}
+var booted = false;
 
-
-
-  // run all
-  for(var i in confs) {
-
-    // run
-    var file =  './conf.d/' + confs[i];
+amqp_connection.on('ready', function () {
+  if (booted) {
+   return;
+  }
+  booted = true;
+  console.log('amqp connection established.');
+ 
+  for(var i in files) {
+    console.log('loading elastic query: ' + files[i]);
+ 
+    var file =  './queries.d/' + files[i];
     var data = JSON.parse(fs.readFileSync(file).toString());
-
-    // run each 
-    run = new runner(client, data);
+ 
+    run = new runner(elasticsearch_client, amqp_connection, data);
     run.run();
-
+ 
   }
 
+});
