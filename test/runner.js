@@ -5,11 +5,13 @@ var expect = require('chai').expect
 
 var Runner = rewire('../lib/runner');
 
-
-describe("Runner", function() {
+  describe("Runner", function() {
 
   it("should exists", function(done) {
-    var runner = new Runner();
+
+    var fake_amqp_connection = {exchange: function() {return {}; } };
+    var runner = new Runner({}, fake_amqp_connection, {});
+
     expect(runner).to.not.be.undefined;
     done();
   });
