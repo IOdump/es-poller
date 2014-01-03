@@ -17,9 +17,11 @@ console.log('waiting for amqp connection');
 var booted = false;
 
 amqp_connection.on('ready', function () {
+  
   if (booted) {
    return;
   }
+
   booted = true;
   console.log('amqp connection established.');
  
