@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "dependencies": {
     "elasticsearch": "*",
-    "amqp": "0.1.x"
+    "amqp": "0.1.x",
+    "dateformat": "*"
   },
   "devDependencies": {
     "mocha": "1.14.0",
