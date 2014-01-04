@@ -10,6 +10,7 @@
     "mocha": "1.14.0",
     "chai": "1.8.x",
     "sinon": "1.7.x",
+    "sinon-chai": "*",
     "rewire": "2.0.x",
     "mocha-lcov-reporter": "*",
     "coveralls": "2.6.x",
